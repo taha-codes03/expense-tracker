@@ -1,0 +1,79 @@
+<div class="txn-page">
+  <div class="page-title">
+    <h2>Transactions</h2>
+    <p>{{ filtered.length }} records found</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Search transactions..." class="search-input" />
+    </div>
+
+    <div class="filter-controls">
+      <select [(ngModel)]="filterType" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="all">All Types</option>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+
+      <select [(ngModel)]="filterCategory" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+      </select>
+
+      <select [(ngModel)]="sortBy" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="date-desc">Newest First</option>
+        <option value="date-asc">Oldest First</option>
+        <option value="amount-desc">Highest Amount</option>
+        <option value="amount-asc">Lowest Amount</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Summary Strip -->
+  <div class="summary-strip" *ngIf="filtered.length > 0">
+    <span class="strip-label">Filtered Total:</span>
+    <span class="strip-amount" [class.positive]="getTotalFiltered() >= 0" [class.negative]="getTotalFiltered() < 0">
+      {{ getTotalFiltered() >= 0 ? '+' : '' }}{{ getTotalFiltered() | formatCurrency }}
+    </span>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filtered.length === 0">
+    <span>📭</span>
+    <p>No transactions found</p>
+    <small>Try adjusting your filters</small>
+  </div>
+
+  <!-- Transaction Cards -->
+  <div class="txn-cards" *ngIf="filtered.length > 0">
+    <div *ngFor="let txn of filtered" class="txn-card" [class.income-card]="txn.type === 'income'" [class.expense-card]="txn.type === 'expense'">
+      <div class="txn-card-left">
+        <div class="txn-icon" [style.background]="getCategoryById(txn.categoryId)?.color + '22'">
+          {{ getCategoryById(txn.categoryId)?.icon }}
+        </div>
+        <div class="txn-info">
+          <span class="txn-name">{{ txn.title }}</span>
+          <div class="txn-meta">
+            <span class="txn-cat-tag" [style.background]="getCategoryById(txn.categoryId)?.color + '22'" [style.color]="getCategoryById(txn.categoryId)?.color">
+              {{ getCategoryById(txn.categoryId)?.name }}
+            </span>
+            <span class="txn-date-meta">{{ txn.date | date:'MMM d, y' }}</span>
+          </div>
+          <span *ngIf="txn.note" class="txn-note">📝 {{ txn.note }}</span>
+        </div>
+      </div>
+      <div class="txn-card-right">
+        <span class="txn-amount-big" [class.income]="txn.type === 'income'" [class.expense]="txn.type === 'expense'">
+          {{ txn.type === 'income' ? '+' : '−' }}{{ txn.amount | formatCurrency }}
+        </span>
+        <span class="txn-type-badge" [class.income-badge]="txn.type === 'income'" [class.expense-badge]="txn.type === 'expense'">
+          {{ txn.type }}
+        </span>
+        <button class="delete-btn" (click)="deleteTransaction(txn.id)" title="Delete">🗑️</button>
+      </div>
+    </div>
+  </div>
+</div>

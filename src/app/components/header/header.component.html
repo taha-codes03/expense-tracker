@@ -1,0 +1,19 @@
+<header class="app-header">
+  <div class="header-brand">
+    <span class="brand-icon">💸</span>
+    <div class="brand-text">
+      <h1>SpendWise</h1>
+      <p>Smart Expense Tracker</p>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <button
+      *ngFor="let tab of tabs"
+      class="nav-btn"
+      [class.active]="activeTab === tab.id"
+      (click)="setTab(tab.id)">
+      <span class="nav-icon">{{ tab.icon }}</span>
+      <span class="nav-label">{{ tab.label }}</span>
+    </button>
+  </nav>
+</header>

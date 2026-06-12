@@ -1,0 +1,76 @@
+<div class="add-page">
+  <div class="page-title">
+    <h2>Add Transaction</h2>
+    <p>Record your income or expense</p>
+  </div>
+
+  <div class="form-card" [formGroup]="form">
+    <!-- Type Toggle -->
+    <div class="type-toggle">
+      <button class="type-btn expense-btn" [class.active]="selectedType === 'expense'" (click)="setType('expense')">
+        <span>📤</span> Expense
+      </button>
+      <button class="type-btn income-btn" [class.active]="selectedType === 'income'" (click)="setType('income')">
+        <span>📥</span> Income
+      </button>
+    </div>
+
+    <!-- Amount -->
+    <div class="field-group amount-group">
+      <label>Amount</label>
+      <div class="amount-input-wrap" [class.error]="isInvalid('amount')">
+        <span class="currency-prefix">PKR</span>
+        <input type="number" formControlName="amount" placeholder="0" class="amount-input" min="0" step="1" />
+      </div>
+      <span class="error-msg" *ngIf="isInvalid('amount')">Please enter a valid amount</span>
+    </div>
+
+    <!-- Title -->
+    <div class="field-group">
+      <label>Title</label>
+      <input type="text" formControlName="title" placeholder="e.g. Grocery shopping" class="text-input" [class.error]="isInvalid('title')" />
+      <span class="error-msg" *ngIf="isInvalid('title')">Title is required (min 2 characters)</span>
+    </div>
+
+    <!-- Category -->
+    <div class="field-group">
+      <label>Category</label>
+      <div class="category-grid">
+        <button
+          *ngFor="let cat of filteredCategories"
+          class="cat-chip"
+          type="button"
+          [class.selected]="form.get('categoryId')?.value === cat.id"
+          [style.--cat-color]="cat.color"
+          (click)="selectCategory(cat.id)">
+          <span class="cat-chip-icon">{{ cat.icon }}</span>
+          <span>{{ cat.name }}</span>
+        </button>
+      </div>
+      <span class="error-msg" *ngIf="isInvalid('categoryId')">Please select a category</span>
+    </div>
+
+    <!-- Date -->
+    <div class="field-group">
+      <label>Date</label>
+      <input type="date" formControlName="date" class="text-input" [class.error]="isInvalid('date')" />
+    </div>
+
+    <!-- Note -->
+    <div class="field-group">
+      <label>Note <span class="optional">(optional)</span></label>
+      <textarea formControlName="note" placeholder="Add a note..." class="textarea-input" rows="2"></textarea>
+    </div>
+
+    <!-- Submit -->
+    <button class="submit-btn" [class.income-submit]="selectedType === 'income'" (click)="onSubmit()" [disabled]="form.invalid">
+      <span>{{ selectedType === 'income' ? '📥' : '📤' }}</span>
+      Add {{ selectedType === 'income' ? 'Income' : 'Expense' }}
+    </button>
+
+    <!-- Success Toast -->
+    <div class="success-toast" *ngIf="showSuccess">
+      ✅ Transaction added successfully!
+    </div>
+  </div>
+</div>

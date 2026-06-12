@@ -1,0 +1,93 @@
+<div class="dashboard">
+  <!-- Balance Hero -->
+  <div class="balance-hero">
+    <div class="balance-label">Total Balance</div>
+    <div class="balance-amount" [class.negative]="(balance$ | async)! < 0">
+      {{ balance$ | async | formatCurrency }}
+    </div>
+    <div class="balance-sub">Updated just now</div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="stat-cards">
+    <div class="stat-card income">
+      <div class="stat-icon">📥</div>
+      <div class="stat-info">
+        <span class="stat-label">Total Income</span>
+        <span class="stat-value">{{ totalIncome$ | async | formatCurrency }}</span>
+      </div>
+      <div class="stat-badge income-badge">+</div>
+    </div>
+    <div class="stat-card expense">
+      <div class="stat-icon">📤</div>
+      <div class="stat-info">
+        <span class="stat-label">Total Expense</span>
+        <span class="stat-value">{{ totalExpense$ | async | formatCurrency }}</span>
+      </div>
+      <div class="stat-badge expense-badge">−</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Recent Transactions -->
+    <div class="card recent-card">
+      <div class="card-header">
+        <h3>Recent Transactions</h3>
+        <button class="view-all-btn" (click)="navigate.emit('transactions')">View All →</button>
+      </div>
+      <ng-container *ngIf="recentTransactions$ | async as txns">
+        <div *ngIf="txns.length === 0" class="empty-state">
+          <span>🧾</span>
+          <p>No transactions yet</p>
+          <button class="add-btn" (click)="navigate.emit('add')">Add your first transaction</button>
+        </div>
+        <div class="txn-list" *ngIf="txns.length > 0">
+          <div *ngFor="let txn of txns" class="txn-item">
+            <div class="txn-cat-icon" [style.background]="getCategoryById(txn.categoryId)?.color + '22'">
+              <span>{{ getCategoryById(txn.categoryId)?.icon }}</span>
+            </div>
+            <div class="txn-details">
+              <span class="txn-title">{{ txn.title }}</span>
+              <span class="txn-date">{{ txn.date | date:'MMM d, y' }}</span>
+            </div>
+            <span class="txn-amount" [class.income]="txn.type === 'income'" [class.expense]="txn.type === 'expense'">
+              {{ txn.type === 'income' ? '+' : '−' }}{{ txn.amount | formatCurrency }}
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Top Spending -->
+    <div class="card spending-card">
+      <div class="card-header">
+        <h3>Top Spending</h3>
+      </div>
+      <ng-container *ngIf="topCategories$ | async as cats">
+        <div *ngIf="cats.length === 0" class="empty-state">
+          <span>📊</span>
+          <p>No expense data yet</p>
+        </div>
+        <div class="spending-list" *ngIf="cats.length > 0">
+          <div *ngFor="let item of cats; let i = index" class="spending-item">
+            <div class="spending-cat">
+              <span class="spending-icon" [style.background]="item.category.color + '22'">{{ item.category.icon }}</span>
+              <span class="spending-name">{{ item.category.name }}</span>
+            </div>
+            <div class="spending-bar-wrap">
+              <div class="spending-bar" [style.background]="item.category.color" [style.width.%]="(i === 0 ? 100 : (cats[i].total / cats[0].total) * 100)"></div>
+            </div>
+            <span class="spending-total">{{ item.total | formatCurrency }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Quick Add Button -->
+  <div class="fab-area">
+    <button class="fab-btn" (click)="navigate.emit('add')">
+      <span>+</span> Add Transaction
+    </button>
+  </div>
+</div>

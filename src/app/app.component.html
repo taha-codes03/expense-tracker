@@ -1,0 +1,9 @@
+<app-header [activeTab]="activeTab" (tabChange)="setTab($event)"></app-header>
+
+<main class="app-main">
+  <app-dashboard *ngIf="activeTab === 'dashboard'" (navigate)="setTab($event)"></app-dashboard>
+  <app-add-transaction *ngIf="activeTab === 'add'" (added)="setTab('transactions')"></app-add-transaction>
+  <app-transaction-list *ngIf="activeTab === 'transactions'"></app-transaction-list>
+  <app-monthly-summary *ngIf="activeTab === 'summary'"></app-monthly-summary>
+  <app-category-manager *ngIf="activeTab === 'categories'"></app-category-manager>
+</main>

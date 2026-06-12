@@ -1,0 +1,88 @@
+<div class="cat-page">
+  <div class="page-header">
+    <div class="page-title">
+      <h2>Categories</h2>
+      <p>Manage your transaction categories</p>
+    </div>
+    <button class="add-cat-btn" (click)="showForm = !showForm">
+      {{ showForm ? '✕ Cancel' : '+ New Category' }}
+    </button>
+  </div>
+
+  <!-- Add Category Form -->
+  <div class="form-card" *ngIf="showForm" [formGroup]="form">
+    <h3>Create Category</h3>
+
+    <div class="type-toggle">
+      <button class="type-btn" [class.expense-active]="selectedType === 'expense'" (click)="setType('expense')">📤 Expense</button>
+      <button class="type-btn" [class.income-active]="selectedType === 'income'" (click)="setType('income')">📥 Income</button>
+    </div>
+
+    <div class="field-group">
+      <label>Name</label>
+      <input type="text" formControlName="name" placeholder="Category name" class="text-input" [class.error]="isInvalid('name')" />
+      <span class="error-msg" *ngIf="isInvalid('name')">Name is required</span>
+    </div>
+
+    <div class="field-group">
+      <label>Icon</label>
+      <div class="icon-grid">
+        <button *ngFor="let icon of icons" type="button" class="icon-btn"
+          [class.icon-selected]="form.get('icon')?.value === icon"
+          (click)="selectIcon(icon)">{{ icon }}</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Color</label>
+      <div class="color-grid">
+        <button *ngFor="let color of colors" type="button" class="color-btn"
+          [class.color-selected]="form.get('color')?.value === color"
+          [style.background]="color"
+          (click)="selectColor(color)">
+          <span *ngIf="form.get('color')?.value === color">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-row">
+      <span>Preview:</span>
+      <span class="cat-preview-chip" [style.background]="form.get('color')?.value + '22'" [style.color]="form.get('color')?.value">
+        {{ form.get('icon')?.value }} {{ form.get('name')?.value || 'Category Name' }}
+      </span>
+    </div>
+
+    <button class="submit-btn" (click)="addCategory()">Add Category</button>
+  </div>
+
+  <!-- Expense Categories -->
+  <div class="cat-section">
+    <div class="section-header">
+      <h3>📤 Expense Categories</h3>
+      <span class="count-badge">{{ expenseCategories.length }}</span>
+    </div>
+    <div class="cat-grid">
+      <div *ngFor="let cat of expenseCategories" class="cat-card" [style.border-color]="cat.color + '44'">
+        <div class="cat-card-icon" [style.background]="cat.color + '22'">{{ cat.icon }}</div>
+        <span class="cat-card-name">{{ cat.name }}</span>
+        <button class="cat-delete-btn" (click)="deleteCategory(cat.id)" title="Delete">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Income Categories -->
+  <div class="cat-section">
+    <div class="section-header">
+      <h3>📥 Income Categories</h3>
+      <span class="count-badge">{{ incomeCategories.length }}</span>
+    </div>
+    <div class="cat-grid">
+      <div *ngFor="let cat of incomeCategories" class="cat-card" [style.border-color]="cat.color + '44'">
+        <div class="cat-card-icon" [style.background]="cat.color + '22'">{{ cat.icon }}</div>
+        <span class="cat-card-name">{{ cat.name }}</span>
+        <button class="cat-delete-btn" (click)="deleteCategory(cat.id)" title="Delete">✕</button>
+      </div>
+    </div>
+  </div>
+</div>

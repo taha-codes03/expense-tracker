@@ -1,0 +1,83 @@
+<div class="summary-page">
+  <div class="page-title">
+    <h2>Monthly Summary</h2>
+    <p>Track your financial performance</p>
+  </div>
+
+  <!-- Month Navigator -->
+  <div class="month-nav">
+    <button class="nav-arrow" (click)="prevMonth()">‹</button>
+    <div class="month-display">
+      <span class="month-name">{{ months[selectedMonth] }}</span>
+      <span class="month-year">{{ selectedYear }}</span>
+    </div>
+    <button class="nav-arrow" (click)="nextMonth()" [disabled]="isCurrentMonth()">›</button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card income-card">
+      <div class="card-icon">📥</div>
+      <div class="card-body">
+        <span class="card-label">Income</span>
+        <span class="card-value income-val">{{ summary.income | formatCurrency }}</span>
+      </div>
+    </div>
+    <div class="summary-card expense-card">
+      <div class="card-icon">📤</div>
+      <div class="card-body">
+        <span class="card-label">Expenses</span>
+        <span class="card-value expense-val">{{ summary.expense | formatCurrency }}</span>
+      </div>
+    </div>
+    <div class="summary-card balance-card" [class.negative-card]="summary.balance < 0">
+      <div class="card-icon">{{ summary.balance >= 0 ? '💰' : '⚠️' }}</div>
+      <div class="card-body">
+        <span class="card-label">Balance</span>
+        <span class="card-value" [class.balance-pos]="summary.balance >= 0" [class.balance-neg]="summary.balance < 0">
+          {{ summary.balance | formatCurrency }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Savings Rate -->
+  <div class="savings-rate-card" *ngIf="summary.income > 0">
+    <div class="savings-header">
+      <div>
+        <h4>Spending Rate</h4>
+        <p>{{ getExpensePercent() }}% of income spent</p>
+      </div>
+      <div class="savings-badge" [class.healthy]="getSavingsRate() >= 20" [class.warning]="getSavingsRate() > 0 && getSavingsRate() < 20" [class.danger]="getSavingsRate() <= 0">
+        {{ getSavingsRate() >= 0 ? getSavingsRate() + '%' : getSavingsRate() + '%' }} saved
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="getExpensePercent()" [class.fill-healthy]="getExpensePercent() <= 70" [class.fill-warning]="getExpensePercent() > 70 && getExpensePercent() <= 90" [class.fill-danger]="getExpensePercent() > 90"></div>
+    </div>
+  </div>
+
+  <!-- Category Breakdown -->
+  <div class="breakdown-card" *ngIf="categoryBreakdown.length > 0">
+    <h3>Category Breakdown</h3>
+    <div class="breakdown-list">
+      <div *ngFor="let item of categoryBreakdown" class="breakdown-row">
+        <div class="breakdown-cat">
+          <span class="breakdown-icon" [style.background]="item.category.color + '22'">{{ item.category.icon }}</span>
+          <span class="breakdown-name">{{ item.category.name }}</span>
+        </div>
+        <div class="breakdown-amounts">
+          <span *ngIf="item.income > 0" class="bd-income">+{{ item.income | formatCurrency }}</span>
+          <span *ngIf="item.expense > 0" class="bd-expense">−{{ item.expense | formatCurrency }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="summary.transactions.length === 0">
+    <span>📅</span>
+    <p>No data for {{ months[selectedMonth] }} {{ selectedYear }}</p>
+    <small>Add transactions to see your monthly summary</small>
+  </div>
+</div>
