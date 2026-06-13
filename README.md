@@ -7,6 +7,7 @@ A visually stunning, full-featured expense tracker built with Angular 17 (standa
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** v18+ → https://nodejs.org
 - **npm** v9+
 
@@ -60,15 +61,15 @@ expense-tracker/
 
 ## ✨ Features
 
-| Feature | Details |
-|---|---|
-| **Add Income/Expense** | Reactive form with validation, category picker, date, notes |
-| **Dashboard** | Balance card, income/expense stats, recent transactions, top spending |
-| **Transaction List** | Search, filter by type/category, sort by date/amount, delete |
-| **Monthly Summary** | Navigate months, savings rate progress bar, category breakdown |
-| **Category Manager** | Add custom categories with icon & color picker, delete any |
-| **Local Storage** | All data persists in browser storage |
-| **Dark Theme** | Deep space dark UI with gradient accents |
+| Feature                | Details                                                               |
+| ---------------------- | --------------------------------------------------------------------- |
+| **Add Income/Expense** | Reactive form with validation, category picker, date, notes           |
+| **Dashboard**          | Balance card, income/expense stats, recent transactions, top spending |
+| **Transaction List**   | Search, filter by type/category, sort by date/amount, delete          |
+| **Monthly Summary**    | Navigate months, savings rate progress bar, category breakdown        |
+| **Category Manager**   | Add custom categories with icon & color picker, delete any            |
+| **Local Storage**      | All data persists in browser storage                                  |
+| **Dark Theme**         | Deep space dark UI with gradient accents                              |
 
 ---
 
@@ -84,7 +85,3 @@ expense-tracker/
 - **LocalStorage** persistence
 
 ---
-
-## 🎨 Resume Point
-
-> Built a full-stack Expense Tracker with Angular 17 using standalone components, reactive forms, BehaviorSubject-based state management, custom currency pipe, and localStorage persistence — featuring real-time balance calculations, category-wise analytics, and monthly summaries with a polished dark-theme UI.
